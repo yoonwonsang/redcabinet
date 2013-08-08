@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+	    <style>
+
+	      html, body, #wrapper, #twitterSignInContainer {
+	        height: 100%;
+	        margin: 0;
+	      }
+
+	      body {
+	  /*
+	        background: url(bg.jpg) repeat-x;
+	  */
+	        color: #333;
+	        font-family: arial, sans-serif;
+	        font-size: 10pt;
+	  		  text-align: center;
+	        background: transparent url(graph_1_faded.png) no-repeat center center;
+	      }
+
+	      #wrapper {
+	        padding-top: 9%;
+	        padding-bottom: 9%;
+	  		  text-align: center;
+	      }
+
+	        img {border-width: 0}
+	        * {font-family:'Lucida Grande', sans-serif;}
+    
+
+	  		  #twitterSignInWrapper
+	  			{
+	  			  height: 100%;
+	  			  padding-top: 26px;
+	  			  text-align: center;
+	  			}
+
+	  		  #twitterSignInPrompt
+	  			{
+	  			  font-size: 12pt;
+	  				font-weight: bold;
+	  				color: #0056aa;
+	  			  width: 100%;
+	  				text-align: center;  
+	  			}
+	  		  #twitterSignInErrorPrompt
+	  			{
+	  			  font-size: 12pt;
+	  				font-weight: bold;
+	  				color: #ff0000;
+	  			  width: 100%;
+	  				text-align: center;  
+	  			}
+
+	      img, fieldset {
+	        border: 0;
+	      }
+
+	      #title {
+	        background: #003466;
+	        height: 36px;
+	        margin: 24px 0 0 0;
+	        text-align: center;
+	        width: 100%;
+	      }
+
+
+	      label.callToAction {
+	  		  text-align: center;
+	  			width: 100%;
+	        color: #5c7429;
+	        font-weight: bold;
+	        margin: 30px 0 12px 50px;
+	      }
+
+	      p.callToAction2 {
+	        color: #5c7429;
+	        font-weight: bold;
+	        margin: 20px 0 12px 0;
+	        text-align: center;
+	      }
+
+	      p.callToAction2 a {
+	        color: #7c9449;
+	      }
+
+	      p.callToAction a:hover {
+	        color: #333333;
+	      }
+
+	      p.error {
+	        color: #ff3333;
+	        font-weight: bold;
+	        margin: 30px 0 12px 50px;
+	      }
+
+	      form {
+	        background: url(form_box.png) no-repeat;
+	        height: 200px;
+	        margin: 10px auto;
+	        padding: 10px 30px 38px 30px;
+	        width: 310px;
+	      }
+
+	      label {
+	        display: block;
+	        float: left;
+	        padding: 6px 0 0 0;
+	        width: 50px;
+	      }
+
+	      input {
+	        padding: 4px;
+	      }
+
+	      input.error {
+	        border: 2px solid #ff6666;
+	      }
+
+	      input.form-text {
+	        border: 2px solid #e8f8c6;
+	        font-weight: bold;
+	        width: 160px;
+	      }
+
+	      #twitter {
+	        height: 46px;
+	        margin: 25px auto 0 auto;
+	        width: 126px;
+	      }
+
+	      #footer {
+	        color: #999;
+	        margin-top: 225px;
+	        text-align: center;
+	      }
+
+	      #footer a {
+	        color: #888;
+	      }
+	    </style>
+		
+		<meta charset="utf-8">
+		<title>Demitase</title>
+		<link href="../static/css/bootstrap.css" rel="stylesheet">
+		<link href="../static/css/demitase.css" rel="stylesheet">
+		<link href="../static/css/bootstrap-responsive.css" rel="stylesheet">
+	</head>
+	<body>
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container">
+					<a class="btn btn-navbar" data-toggle="collapse" data-target="#navMenu">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</a>
+					<a class="brand" href="#">DEMITASE</a>
+					<div class="nav-collapse" id="navMenu">
+						<ul class="nav center">
+							<li class="active"><a href="#">Home</a></li>
+							<li><a href="#">About Team</a></li>
+							<li><a href="#">What's Demitase?</a></li>
+						</ul>
+						<!-- <div class="btn-group pull-right">
+							<a class="btn" id="adminBtn">
+								<i class="icon-user"></i> USER_ID
+								<span class="caret"></span>
+							</a>
+							<a class="btn" id="logoutBtn">
+								<i class="icon-off"></i> LOGOUT
+							</a>
+						</div> -->
+					</div>
+				</div>
+			</div>
+		</div><!--End of NavBar-->
+
+	<body>
+		<div id="wrapper">
+		  <p id="twitterSignInPrompt">Sign into Twitter now to start your Demitase experience!</p>
+		  <a id="twitterSignInLink" href="http://210.118.56.77/oauth/get/"><img src="../static/img/connectButton.png" alt="Connect with Twitter"/></a>
+		</div>
+
+		<p><a href="http://210.118.56.77/oauth/get/">Go to twitter_oauth.</a></p>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">
+		</script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1,8.18/jquery-ui.min.js">
+		</script>
+		<script src="../static/js/bootstrap.js"></script>
+	</body>
+	</html>

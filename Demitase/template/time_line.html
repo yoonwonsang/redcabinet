@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="/static/css/cluster.css">
+<script type="text/javascript" src="/static/js/cluster.js"></script>
+<script type="text/javascript" src="/static/js/chart.js"></script>
+<script type="text/javascript">
+
+</script>
+{% endblock %}
+
+{% block body %}
+
+<center>
+<img src="/static/img/twitter_main.png" alt="main" >
+
+<form action="/login/" id="oauth_form" method="post">{% csrf_token %}
+<fieldset class="sign-in">
+  <legend>Sign in to Twitter</legend>
+  <div class="row user content">
+    <label for="username_or_email" tabindex="-1">아이디 또는 이메일</label>
+    <input aria-required="true" autocapitalize="off" autocorrect="off" autofocus="autofocus" class="text" id="username_or_email" name="username_or_email" type="text">
+  </div>
+  <div class="row password">
+  <label for="password" tabindex="-1">비밀번호</label>
+    <input aria-required="true" class="password text" id="password" name="password" type="password" value="">
+  </div>
+</fieldset>
+<button type="submit" class="btn btn-primary" tabindex="4">로그인</button>
+
+    
+</form>
+
+</center>
+<!--
+<div id="hdfs" class="full"></div>
+<div id="mapreduce" class="full" style="margin-bottom:5em;"></div>
+-->
+{% endblock %}
+
+
