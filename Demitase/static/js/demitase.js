@@ -1,8 +1,10 @@
-var baseUrl = 'http://210.118.56.77/';
+var baseUrl = 'http://127.0.0.1:8000/';
 var stream = [];
 var hotkeys = [];
 var cntlist = [];
+var keycnt = 0;
 var tmp = 0;
+var keySelection;
 
 var doLogout = function() {
 	alert("Real.....ly???");
@@ -21,8 +23,8 @@ var doGetTimeline = function() {
 
 		},
 		error : function() {
-			alert("Fail to Load API")
-		}
+			alert("Fail to Load API");
+		},
 	});
 
 }
@@ -43,7 +45,7 @@ var doGetMoreTimeline = function(num) {
 			doShowKeys(hotkeys);
 		},
 		error : function() {
-			alert("Fail to get data!");
+			// alert("Fail to get data!");
 		},
 	});
 }
@@ -76,19 +78,57 @@ var doSortHotkeys = function(){
 	}
 }
 
+
 var doAppend = function(data) {
+	// alert($('#selectedKey').html());
+	if (keySelection) {
+		for (var i in data.keywords) {
+			if (keySelection == data.keywords[i]){
+				node = $('#msgTemplate').clone();
+				$('.name', node).append(data.username);
+				$('.content', node).append(data.text);
+				$('.date', node).append(data.date);
+				node.show();
+				$('#timelinearea').append(node);
+			}
+		}
+	} else {
 	// alert("test");
-	node = $('#msgTemplate').clone();
-	$('.name', node).append(data.username);
-	$('.content', node).append(data.text);
-	$('.date', node).append(data.date);
+		node = $('#msgTemplate').clone();
+		$('.name', node).append(data.username);
+		$('.content', node).append(data.text);
+		$('.date', node).append(data.date);
+		node.show();	
+		$('#timelinearea').append(node);
+	}
 	for (var i in data.keywords){
 		$('.key'+i, node).append(data.keywords[i]);
 		doSumKeywords(data.keywords[i]);
 	}
+}
 
-	node.show();	
-	$('#timelinearea').append(node);
+var doAppend2 = function(data) {
+	// alert($('#selectedKey').html());
+	if (keySelection) {
+		for (var i in data.keywords) {
+			if (keySelection == data.keywords[i]){
+				node = $('#msgTemplate').clone();
+				$('.name', node).append(data.username);
+				$('.content', node).append(data.text);
+				$('.date', node).append(data.date);
+				node.show();
+				$('#timelinearea').append(node);
+			}
+		}
+	} else {
+	// alert("test");
+		node = $('#msgTemplate').clone();
+		$('.name', node).append(data.username);
+		$('.content', node).append(data.text);
+		$('.date', node).append(data.date);
+		node.show();	
+		$('#timelinearea').append(node);
+	}
 }
 
 var doShowKeys = function() {
@@ -115,6 +155,7 @@ var doShowKeys = function() {
 	}
 	$('#lessMoreKeys').show();
 	$('#keylistarea').append($('#lessMoreKeys'));
+}
 
 
 var doSeeMoreKeys = function() {
@@ -149,22 +190,21 @@ var doSumKeywords = function(word){
 					continue;
 				}
 			}
-			
+
 		}
 	}
-	// alert("KEY :" + word "\n")
 }
 
 var doSelectKeyword = function() {
-	
-	var id = $('.word', $(this)).html();
 
-	$('#selectedKey').html(id);
+	keySelection = $('.word', $(this)).html();
+
+	$('#selectedKey').html(keySelection);
 	doClear();
 	for (var i in stream){
 		for (var j in stream[i].keywords){
-			if(stream[i].keywords[j] == id){
-				doAppend(stream[i]);
+			if(stream[i].keywords[j] == keySelection){
+				doAppend2(stream[i]);
 			} else {
 				continue;
 			}
@@ -174,6 +214,7 @@ var doSelectKeyword = function() {
 
 var doShowAllTimeline = function() {
 	doClear();
+	keySelection = '';
 	$('#selectedKey').html("Select a Keyword");
 	for (var i in stream){
 		doAppend(stream[i]);
@@ -190,28 +231,29 @@ var doClear = function() {
 }
 
 
-// UTILITY METHODS
-function setCookie(name, value, day) {
-	var expire = new Date();
-	expire.setDate(expire.getDate() + day);
-	cookies = name + '=' + escape(value) + '; path=/ ';
-	if (typeof day != 'undefined')
-		cookies += ';expires=' + expire.toGMTString() + ';';
-	document.cookie = cookies;
-}
+// // UTILITY METHODS
+// function setCookie(name, value, day) {
+// 	var expire = new Date();
+// 	expire.setDate(expire.getDate() + day);
+// 	cookies = name + '=' + escape(value) + '; path=/ ';
+// 	if (typeof day != 'undefined')
+// 		cookies += ';expires=' + expire.toGMTString() + ';';
+// 	document.cookie = cookies;
+// }
+// 
+// function getCookie(name) {
+// 	name = name + '=';
+// 	var cookieData = document.cookie;
+// 	var start = cookieData.indexOf(name);
+// 
+// 	var value = '';
+// 	if (start != -1) {
+// 		start += name.length;
+// 		var end = cookieData.indexOf(';', start);
+// 		if (end == -1)
+// 			end = cookieData.length;
+// 		value = cookieData.substring(start, end);
+// 	}
+// 	return unescape(value);
+// }
 
-function getCookie(name) {
-	name = name + '=';
-	var cookieData = document.cookie;
-	var start = cookieData.indexOf(name);
-	
-	var value = '';
-	if (start != -1) {
-		start += name.length;
-		var end = cookieData.indexOf(';', start);
-		if (end == -1)
-			end = cookieData.length;
-		value = cookieData.substring(start, end);
-	}
-	return unescape(value);
-}
