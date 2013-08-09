@@ -38,8 +38,12 @@ def index(request):
 	return HttpResponseRedirect('/login/')
 
 def logout(request):
-    del request.session['key']
-    return HttpResponseRedirect('/login/')
+    try:
+        del request.session['key']
+        return HttpResponseRedirect('/login/')
+    except:
+        return HttpResponseRedirect('/login/')
+
 
 '''
 def login(request):
@@ -136,9 +140,7 @@ def login(request):
 def Get(request):
     auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET, CALLBACK_URL)
     try :
-        print "1"
         auth_url = auth.get_authorization_url(True)
-        print "2"
     except tweepy.TweepError:
         print 'Error! Failed to get request token'
  

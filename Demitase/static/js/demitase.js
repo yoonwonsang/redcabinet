@@ -2,7 +2,6 @@ var baseUrl = 'http://210.118.56.77/';
 var stream = [];
 var hotkeys = [];
 var cntlist = [];
-var keycnt = 0;
 var tmp = 0;
 
 var doLogout = function() {
@@ -12,8 +11,29 @@ var doLogout = function() {
 
 var doGetTimeline = function() {
 	$.ajax({
+		url : baseUrl + 'demitase_init/',
+		async : false,
+		success : function() {
+			for (var num = 0; num < 200; num++){
+				// alert("MoreTimeline Get :" + num);
+			    doGetMoreTimeline(num);	
+			}
+
+		},
+		error : function() {
+			alert("Fail to Load API")
+		}
+	});
+
+}
+
+
+var doGetMoreTimeline = function(num) {
+	$.ajax({ 
 		type : 'get',
 		url : baseUrl + 'demitase/',
+		data : {query:num},
+		async : true,
 		success : function(data) {
 			for (var i in data) {
 				stream.push(data[i]);
@@ -30,6 +50,7 @@ var doGetTimeline = function() {
 
 
 var doSortHotkeys = function(){
+	cntlist = [];
 	for (var i = 0; i < hotkeys.length; i++){
 		for (var j = 0; j < hotkeys.length; j++){
 			if(hotkeys[i].count >= hotkeys[j].count && i != j){
@@ -71,32 +92,30 @@ var doAppend = function(data) {
 }
 
 var doShowKeys = function() {
-	for (var i = 0; i < 10; i++, keycnt++ ){
-		if (hotkeys.length == keycnt){
-			break;
+	$('#keylistarea').empty();
+	for (var i = 0; i < hotkeys.length; i++ ){
+			// alert("KeyCnt: "+keycnt+"\nResult: "+hotkeys[keycnt].count);
+		if(hotkeys[i].count == cntlist[0]){
+			badge_style = "badge badge-important";
+		} else if(hotkeys[i].count == cntlist[1]){
+			badge_style = "badge badge-warning";
+		} else if(hotkeys[i].count == cntlist[2]){
+			badge_style = "badge badge-success";
+		} else if(hotkeys[i].count == cntlist[3]){
+			badge_style = "badge badge-info";
 		} else {
-			if(hotkeys[keycnt].count == cntlist[0]){
-				badge_style = "badge badge-important"
-			} else if(hotkeys[keycnt].count == cntlist[1]){
-				badge_style = "badge badge-warning"
-			} else if(hotkeys[keycnt].count == cntlist[2]){
-				badge_style = "badge badge-success"
-			} else if(hotkeys[keycnt].count == cntlist[3]){
-				badge_style = "badge badge-info"
-			} else {
-				badge_style = "badge"
-			}
-			node = $('#sortedKeys').clone();
-			$('.word', node).append(hotkeys[keycnt].keyword);
-			node.append("<span class=\"count_badge "+badge_style+"\">"+hotkeys[keycnt].count+"</span>")
-			// $('.count_badge', node).append(hotkeys[keycnt].count);
-			node.show();
-			$('#keylistarea').append(node);
+			badge_style = "badge";
 		}
+		node = $('#sortedKeys').clone();
+		$('.word', node).append(hotkeys[i].keyword);
+		node.append("<span class=\"count_badge "+badge_style+"\">"+hotkeys[i].count+"</span>")
+		// $('.count_badge', node).append(hotkeys[keycnt].count);
+		node.show();
+		$('#keylistarea').append(node);
 	}
 	$('#lessMoreKeys').show();
 	$('#keylistarea').append($('#lessMoreKeys'));
-}
+
 
 var doSeeMoreKeys = function() {
 	doShowKeys();
@@ -130,13 +149,14 @@ var doSumKeywords = function(word){
 					continue;
 				}
 			}
-
+			
 		}
 	}
+	// alert("KEY :" + word "\n")
 }
 
 var doSelectKeyword = function() {
-
+	
 	var id = $('.word', $(this)).html();
 
 	$('#selectedKey').html(id);
@@ -184,7 +204,7 @@ function getCookie(name) {
 	name = name + '=';
 	var cookieData = document.cookie;
 	var start = cookieData.indexOf(name);
-
+	
 	var value = '';
 	if (start != -1) {
 		start += name.length;
@@ -195,4 +215,3 @@ function getCookie(name) {
 	}
 	return unescape(value);
 }
-

@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     # url(r'^main/$', 'curation.demitase.views.main'),
     url(r'^demitase/(?P<curr_demitase>[\w\-]+)/',include('curation.demitase.urls')),
     url(r'^demitase/$',include('curation.demitase.urls')),
+    url(r'^demitase_init/$','curation.demitase.views.get_timeline'),
     
     #OAuth
     url(r'^oauth/$', 'curation.views.login'),
