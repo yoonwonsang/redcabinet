@@ -32,6 +32,7 @@ from django.shortcuts import render_to_response
 from curation import commons
 from curation import views
 from curation.settings import CONSUMER_KEY,CONSUMER_SECRET
+from curation.utils import urlize
 
 import httplib, json
 import tweepy
@@ -39,10 +40,8 @@ import MeCab
 import sys
 import string
 
-import urllib
+import urllib2
 import chardet
-
-from django.utils.html import urlize
 
 import itertools
 from operator import itemgetter
@@ -56,17 +55,37 @@ from pygraph.classes.exceptions import AdditionError
 
 from readability.readability import Document
 
+#sjo
+import time
+
+
+_file = open('/temp/demitase.log','a')
+
+exception_url =['youtube.com','vimeo.com','newsnetz.ch','digieco.co.kr']
 userTimeline = []
 
-
 def extrat_html_document(url):
-    html = urllib.urlopen(url).read()
-    readable_article = Document(html).summary()
-    readable_title = Document(html).short_title()
+    try :
+        socket = urllib2.urlopen(url,timeout = 1)
+        url = socket.geturl()
+        html = socket.read()
+        for ext_url in exception_url:
+            if len(url.split(ext_url)) > 1:
+                readable_title = Document(html).short_title()
+                summary = readable_title.encode('utf-8')
+                _file.write(summary+'\n')
+                return summary
 
-    summary = readable_title.encode('utf-8')
-    summary += readable_article.encode('utf-8')
-    return summary 
+        readable_article = Document(html).summary()
+        readable_title = Document(html).short_title()
+        summary = readable_title.encode('utf-8')
+        summary += readable_article.encode('utf-8')
+
+    except Exception:
+        _file.write('extrat_html_document Failed URL : ' + url + '\n')
+        summary = "Failed Get data"
+
+    return summary
 
 def unique_everseen(iterable, key=None):
     seen = set()
@@ -88,66 +107,52 @@ def normalize(tagged):
 
 def serve_html(request, page):
     return render_to_response(page+'.html')
+    # return render_to_response('timeline/' += page + '.html', {}, context_instance=RequestContext(request))
 
 def toJSON(objs, status=200):
     json_str = json.dumps(objs, ensure_ascii=False)
     return HttpResponse(json_str, status=status, content_type='application/json; charset=utf-8')
 
-      
 def get_timeline(request):
-    print "!!!!!"
     global userTimeline
     auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
     auth.set_access_token(request.session.get('key'), request.session.get('secret'))
     api = tweepy.API(auth_handler=auth)
-    userTimeline = api.home_timeline(count=500)
-    
-    return toJSON(len(userTimeline),200)
+    userTimeline = api.home_timeline(count=200)
+                            
+    return HttpResponse(status=200)
 
 def timeline(request):
 
     global userTimeline
     get_no = request.GET.get('query','')
-        
-    print "GET_NO: " + get_no
+
+    start_time = time.time()
     num = 1
+    i = 1
     tweet = []
     parsenode = []
     data = []
     ex_url = []
 
-    
     s = userTimeline[int(get_no)]
     tagged = []
     if s.entities.urls:
         for u in s.entities.urls:
       # Facebook, instagram , twitpic 등 사진 url 모두 pass
-            print u.expanded_url.encode("utf8")
             if u.expanded_url.encode("utf8").find("fb.me") > 0 or u.expanded_url.encode("utf8").find("instagram") > 0 or u.expanded_url.encode("utf8").find("pic.twitter") > 0:
                 print "This link is pic"
-                print "mecab_start"
-                t = MeCab.Tagger (" ".join(sys.argv))
-                m = t.parseToNode(s.text.encode("utf8"))
-                continue
-                
-            print "soup_start"
-            try:
-                htmlSource = extrat_html_document(u.expanded_url)
-                print "soup_end"
-
-#                   Title이 아닌 전체에서 명사 추출
-                print "mecab_start"
-                t = MeCab.Tagger (" ".join(sys.argv))
-                m = t.parseToNode(htmlSource)
-            except:
-                print "mecab_start"
                 t = MeCab.Tagger (" ".join(sys.argv))
                 m = t.parseToNode(s.text.encode("utf8"))
 
+            tweet_text = s.text.encode("utf-8").split(u.url)[0]
+            
+            htmlSource = extrat_html_document(u.expanded_url)
+            t = MeCab.Tagger (" ".join(sys.argv))
+            m = t.parseToNode(tweet_text + htmlSource)
 
 #       link 없는 tweet
     else:
-        print "mecab_start"
         t = MeCab.Tagger (" ".join(sys.argv))
         m = t.parseToNode(s.text.encode("utf8"))
 
@@ -173,7 +178,6 @@ def timeline(request):
     while 1:
         window_words = tagged[window_start:window_end]
         if len(window_words) == 2:
-#                print window_words
             try:
                 gr.add_edge((window_words[0], window_words[1]))   #그래프로  word[0] word[1] 연결
             except AdditionError, e:
@@ -184,9 +188,9 @@ def timeline(request):
         window_end += 1
 
 
+
     calculated_page_rank = demitase_pagerank(gr)     #gr에 있는 keyword 를 pagerank 처리. key 와 graph 처리 값을 이용하여 calculate 하는듯
     di = sorted(calculated_page_rank.iteritems(), key=itemgetter(1))
-
 
     key_list = []
     item_num = 0
@@ -194,7 +198,7 @@ def timeline(request):
     for k, g in itertools.groupby(reversed(di), key=itemgetter(1)):
         for item in map(itemgetter(0),g):
             temp_surface+= item[0] + " = " + str(k) + " | "
-            if item_num < 10:
+            if item_num < 3:
                 key_list.append(item[0])
             else:
                 break
@@ -202,7 +206,6 @@ def timeline(request):
 
 
     parsenode.append(temp_surface)
-    print "mecab_end"
     num = num+1
     
     data.append({
@@ -213,7 +216,7 @@ def timeline(request):
         'date':str(s.created_at),
         'keywords':key_list,
     })
-    # get_no += 1
+
+    _file.write('processing time : ' + str(time.time() - start_time) + '\n')
 
     return toJSON(data)
-    
