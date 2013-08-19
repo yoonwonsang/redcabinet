@@ -1,23 +1,25 @@
 <!DOCTYPE html>
 <html lang="ko">
 	<head>
-
 		<meta charset="utf-8">
 		<title>Demitase</title>
+		<link href="../../static/css/index.css" rel="stylesheet"> 
 		<link href="../../static/css/bootstrap.css" rel="stylesheet">
-		<!-- <link href="../../static/css/demitase.css" rel="stylesheet"> -->
 		<link href="../../static/css/bootstrap-responsive.css" rel="stylesheet">
 	</head>
-	<body>
-		<div style="position:absolute; background-image:url(../../static/img/bg_login.jpg); width:100%; height:100%;">
-			<div style="padding:20px 30px 20px 30px;">
-				<span><img src="../../static/img/logo_index.png"></span>
-				<div align="center" style="font-size: 30px; margin-top:150px; color: #FFFFFF;"><img src="../../static/img/ic_rc_wh.png"> Everyone's personalized information summary.</div>
-		  		<div align="center" style="margin-top: 50px;"><a href="http://127.0.0.1:8000/oauth/get/"><img src="../../static/img/btn_login.png" alt="Connect with Twitter"/></a></div>
-		  		<p style="position: absolute; right: 30px; bottom: 35px; font-size: 16px; color: #FFFFFF;">Prototype Ver 0.0.1</p>
-		  		<p style="position: absolute; right: 30px; bottom: 20px; font-size: 16px; color: #FFFFFF;">Right Reserved Redcabinet</p>
-		 	</div>
-		</div>
+	<body class="index">
+		<div class="main">
+			<img src="../../static/img/logo_index.png">
+			<div class="catchphrase">
+			    <img src="../../static/img/ic_rc_wh.png"> Everyone's personalized information Summary
+			</div>
+			<a class="twt_cnt_btn" href="http://127.0.0.1:8000/oauth/get/"><img src="../../static/img/btn_login.png"></a>
+			<!-- <a class="twt_cnt_btn" href="http://www.demitase.com/oauth/get/"><img src="../../static/img/btn_login.png"></a> -->
+			<div class="copyright">
+			    Prototype Ver 0.0.1<br>
+			    All Right Reserved Redcabinet
+			</div>
+	 	</div>
 
 		<!-- <p><a href="http://210.118.56.77/oauth/get/">Go to twitter_oauth.</a></p> -->
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">

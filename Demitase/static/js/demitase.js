@@ -1,9 +1,11 @@
+//var baseUrl = 'http://www.demitase.com/';
 var baseUrl = 'http://127.0.0.1:8000/';
 var stream = [];
 var hotkeys = [];
 var cntlist = [];
 var keycnt = 0;
 var tmp = 0;
+var apicnt = 100;
 var keySelection;
 
 var doLogout = function() {
@@ -15,12 +17,12 @@ var doGetTimeline = function() {
 	$.ajax({
 		url : baseUrl + 'demitase_init/',
 		async : false,
-		success : function() {
-			for (var num = 0; num < 200; num++){
+		success : function(data) {
+			for (var num = 0; num < data.api_cnt; num++){
 				// alert("MoreTimeline Get :" + num);
-			    doGetMoreTimeline(num);	
-			}
+			    doGetMoreTimeline(num, data.my_id);	
 
+			}
 		},
 		error : function() {
 			alert("Fail to Load API");
@@ -30,12 +32,12 @@ var doGetTimeline = function() {
 }
 
 
-var doGetMoreTimeline = function(num) {
+var doGetMoreTimeline = function(num, my_id) {
 	$.ajax({ 
 		type : 'get',
 		url : baseUrl + 'demitase/',
-		data : {query:num},
-		async : true,
+		data : {query:num, id:my_id},
+		async : false,
 		success : function(data) {
 			for (var i in data) {
 				stream.push(data[i]);
@@ -43,9 +45,10 @@ var doGetMoreTimeline = function(num) {
 			}
 			doSortHotkeys();
 			doShowKeys(hotkeys);
+			
 		},
 		error : function() {
-			// alert("Fail to get data!");
+			alert("Fail to get data!");
 		},
 	});
 }

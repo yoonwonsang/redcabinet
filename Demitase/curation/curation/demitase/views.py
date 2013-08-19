@@ -33,6 +33,7 @@ from curation import commons
 from curation import views
 from curation.settings import CONSUMER_KEY,CONSUMER_SECRET
 from curation.utils import urlize
+from curation.models import *
 
 import httplib, json
 import tweepy
@@ -57,6 +58,7 @@ from readability.readability import Document
 
 #sjo
 import time
+import pdb
 
 
 _file = open('/temp/demitase.log','a')
@@ -119,37 +121,89 @@ def get_timeline(request):
     auth.set_access_token(request.session.get('key'), request.session.get('secret'))
     api = tweepy.API(auth_handler=auth)
     userTimeline = api.home_timeline(count=200)
-                            
-    return HttpResponse(status=200)
+    verifyCred = api.verify_credentials()
+    
+    print 'MY_ID:' + verifyCred.id_str + 'USERNM: ' + verifyCred.name
+    
+    try:
+        HomeTimelineTmp.objects.filter(user_id=verifyCred.id_str).delete()
+    except:
+        print "No Objects"
+        
+    try:
+        HomeTimelineUrlTmp.objects.filter(user_id=verifyCred.id_str).delete()
+    except:
+        print "No Objects"
+        
+    i = 0 
+    for data in userTimeline:
+        homeTimeline = HomeTimelineTmp()
+        j = 0
+        try:
+            homeTimeline.user_id = verifyCred.id_str
+            homeTimeline.seq = i
+            homeTimeline.twt_id = data.id_str
+            homeTimeline.twt_author_id = data.user.id
+            homeTimeline.twt_author_nm = data.user.name.encode("utf-8")
+            homeTimeline.text = data.text.encode("utf-8")
+            homeTimeline.created_at = data.created_at
+            if data.entities.urls:
+                for u in data.entities.urls:
+                    urlList = HomeTimelineUrlTmp()
+                    urlList.user_id = verifyCred.id_str
+                    urlList.twt_id = data.id_str
+                    urlList.url_seq = j
+                    urlList.url = u.url
+                    urlList.expanded_url = u.expanded_url
+                    urlList.save()
+                    j = j + 1
+            homeTimeline.url_cnt = j
+            homeTimeline.save()
+        except:
+            return toJSON({'status':'bad request'},400)
+        i = i + 1
+    
+    data = {'api_cnt':len(userTimeline),
+            'my_id':verifyCred.id_str,}
+
+    return toJSON(data,200)
+
+def checkExist():
+    return 0
+
 
 def timeline(request):
 
-    global userTimeline
+    # global userTimeline
     get_no = request.GET.get('query','')
+    my_id = request.GET.get('id','')
 
     start_time = time.time()
     num = 1
-    i = 1
+    i = 0
     tweet = []
     parsenode = []
     data = []
     ex_url = []
 
-    s = userTimeline[int(get_no)]
+    # s = userTimeline[int(get_no)]
+    s = HomeTimelineTmp.objects.get(seq=int(get_no), user_id = str(my_id))
     tagged = []
-    if s.entities.urls:
-        for u in s.entities.urls:
+    if s.url_cnt > 0:
+        for i in range(s.url_cnt):
+            u = HomeTimelineUrlTmp.objects.get(twt_id=s.twt_id, url_seq = i)
+            
       # Facebook, instagram , twitpic 등 사진 url 모두 pass
             if u.expanded_url.encode("utf8").find("fb.me") > 0 or u.expanded_url.encode("utf8").find("instagram") > 0 or u.expanded_url.encode("utf8").find("pic.twitter") > 0:
                 print "This link is pic"
                 t = MeCab.Tagger (" ".join(sys.argv))
                 m = t.parseToNode(s.text.encode("utf8"))
 
-            tweet_text = s.text.encode("utf-8").split(u.url)[0]
+            tweet_text = s.text.split(u.url)[0]
             
             htmlSource = extrat_html_document(u.expanded_url)
             t = MeCab.Tagger (" ".join(sys.argv))
-            m = t.parseToNode(tweet_text + htmlSource)
+            m = t.parseToNode(str(tweet_text.encode("utf-8")) + htmlSource)
 
 #       link 없는 tweet
     else:
@@ -209,9 +263,9 @@ def timeline(request):
     num = num+1
     
     data.append({
-        'twt_id':s.id,
-        'user_id':s.user.id,
-        'username':s.user.name.encode("utf8"),
+        'twt_id':s.twt_id.encode("utf8"),
+        'user_id':s.twt_author_id.encode("utf8"),
+        'username':s.twt_author_nm.encode("utf8"),
         'text':urlize(s.text).encode("utf8"),
         'date':str(s.created_at),
         'keywords':key_list,
