@@ -16,7 +16,7 @@ var doLogout = function() {
 var doGetTimeline = function() {
 	$.ajax({
 		url : baseUrl + 'demitase_init/',
-		async : false,
+		async : true,
 		success : function(data) {
 			for (var num = 0; num < data.api_cnt; num++){
 				// alert("MoreTimeline Get :" + num);
@@ -37,7 +37,7 @@ var doGetMoreTimeline = function(num, my_id) {
 		type : 'get',
 		url : baseUrl + 'demitase/',
 		data : {query:num, id:my_id},
-		async : false,
+		async : true,
 		success : function(data) {
 			for (var i in data) {
 				stream.push(data[i]);
