@@ -15,7 +15,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '/home/fivestar/Fivestar/demitase/Demitase/curation/db/db.sqlite3',                      # Or path to database file if using sqlite3.
+        'NAME': '/home/fivestar/Fivestar/redcabinet/Demitase/curation/db/db.sqlite3',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -129,6 +129,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'curation.demitase',
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
@@ -161,6 +162,6 @@ LOGGING = {
 
 CONSUMER_KEY = 'QN5inGo2xmA7717qxCQ'
 CONSUMER_SECRET = 'dxOvz4PmcWBrQlEkFpK9lu68dT1q0QNEB4UVMYWpmRI'
-CALLBACK_URL = 'http://210.118.56.77/oauth/get_callback/'
+CALLBACK_URL = 'http://www.demitase.com/oauth/get_callback/'
 #CONSUMER_KEY = 'FL686aqs4NVkWyrrxs7zQ'
 #CONSUMER_SECRET = 'bxcIpVfAf8OMhKmj966C1EynevAz5OvoLYNlMEYxFE'

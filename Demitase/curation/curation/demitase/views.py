@@ -34,7 +34,7 @@ from curation import commons
 from curation import views
 from curation.settings import CONSUMER_KEY,CONSUMER_SECRET
 from curation.utils import urlize
-from curation.models import *
+from curation.demitase.models import *
 
 import httplib, json
 import tweepy
@@ -122,7 +122,6 @@ def get_timeline(request):
     api = tweepy.API(auth_handler=auth)
     userTimeline = api.home_timeline(count=200)
     verifyCred = api.verify_credentials()
-    
 #     pdb.set_trace()
     
     try:
@@ -215,6 +214,7 @@ def timeline(request):
     key_list = []
 
     s = HomeTimelineTmp.objects.get(user_id = str(my_id), content_seq = str(get_no))
+
     if checkContentExists(s.content_type, s.content_id):
         cd = ContentDetail.objects.get(content_type = s.content_type, content_id = s.content_id)
         if cd.content_key_cnt > 0:
@@ -263,9 +263,10 @@ def timeline(request):
         while m:
             if m.feature.split(",")[0] == "NN":
                 try:
-                    tagged.append((m.surface,m.feature.split(",")[8]))
+                    tagged.append((m.feature.split(",")[2],m.feature.split(",")[8]))
                 except Exception:
-                    tagged.append((m.surface,"NN"))
+                    print ""
+#                    tagged.append((m.surface,"NN"))
             m = m.next
     
     
