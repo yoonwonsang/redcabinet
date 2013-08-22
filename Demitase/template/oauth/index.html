@@ -1,30 +1,81 @@
 <!DOCTYPE html>
-<html lang="ko">
-	<head>
-		<meta charset="utf-8">
-		<title>Demitase</title>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Redcabinet</title>
 		<link href="../../static/css/index.css" rel="stylesheet"> 
 		<link href="../../static/css/bootstrap.css" rel="stylesheet">
 		<link href="../../static/css/bootstrap-responsive.css" rel="stylesheet">
 	</head>
-	<body class="index">
-		<div class="main">
-			<img src="../../static/img/logo_index.png">
-			<div class="catchphrase">
-			    <img src="../../static/img/ic_rc_wh.png"> Everyone's personalized information Summary
-			</div>
-				<a class="twt_cnt_btn" href="http://www.demitase.com/oauth/get/"><img src="../../static/img/btn_login.png"></a>
-			<div class="copyright">
-			    Prototype Ver 0.0.1<br>
-			    All Right Reserved Redcabinet
-			</div>
-	 	</div>
-
-		<!-- <p><a href="http://210.118.56.77/oauth/get/">Go to twitter_oauth.</a></p> -->
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">
-		</script>
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1,8.18/jquery-ui.min.js">
-		</script>
-		<script src="../static/js/bootstrap.js"></script>
+	<body>
+        <ul id="ptype">
+            <p>prototype</p>    
+        </ul>
+    
+        <ul id="nav">
+            <li><a href="#intro" title="Next Section"><img src="../../static/img/dot.png" alt="Link" /></a></li>
+            <li><a href="#second" title="Next Section"><img src="../../static/img/dot.png" alt="Link" /></a></li>
+            <li><a href="#third" title="Next Section"><img src="../../static/img/dot.png" alt="Link" /></a></li>
+            <li><a href="#fifth" title="Next Section"><img src="../../static/img/dot.png" alt="Link" /></a></li>
+        </ul>
+    
+        <div id="intro">
+            <div class="story">
+                <div class="center">
+                    <h1>Redcabinet</h1> <br><br>
+                    <p>Everyone's personalized information summary.</p> <br><br><br> 
+                    <a class="twt_cnt_btn" href="http://127.0.0.1:8000/oauth/get/"><img src="../../static/img/btn_login.png"></a>
+                </div>
+            </div> <!--.story-->
+        </div> <!--#intro-->
+        
+        <div id="second">
+            <div class="story">
+                <div class="bg"></div>
+                <div class="float-left">
+                    <h2>Redcabinet</h2>
+                        <p> Redcabinet is sala~ sala~  about 4~5 line? </p>
+                </div>
+                <div class="float-right">
+                    <iframe src="http://player.vimeo.com/video/72866326?portrait=0&amp;badge=0" width="800" height="450" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe> 
+                    <!-- <iframe width="460" height="215" src="//www.youtube.com/embed/NvrWeqPVuAw?rel=0" frameborder="0" allowfullscreen></iframe> -->
+                </div>
+            </div> <!--.story-->
+        </div> <!--#second-->
+        
+        <div id="third">
+            <div class="story">
+                <div class="float-left">
+                    <h2>We</h2>
+                    <p>The user gets a slap! Actually, all that jQuery does is moves the backgrounds relative to the position of the scrollbar. Without it, the backgrounds simply stay put and the user would never know they are missing out on the awesome! CSS2 does a good enough job to still make the effect look cool.</p>
+                    <img src="../../static/img/member1.png"> <img src="../../static/img/member2.png"> <img src="../../static/img/member1.png">
+                </div>
+            </div> <!--.story-->
+        </div> <!--#third-->
+        
+        <div id="fifth">
+            <div class="story">
+                <p>All right reserved Redcabinet . Anybody@redcabi.net</p>
+            </div> <!--.story-->
+        </div> <!--#fifth-->
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1,8.18/jquery-ui.min.js"></script>
+    	<script type="text/javascript" src="../../static/js/jquery.parallax-1.1.3.js"></script>
+        <script type="text/javascript" src="../../static/js/jquery.localscroll-1.2.7-min.js"></script>
+        <script type="text/javascript" src="../../static/js/jquery.scrollTo-1.4.2-min.js"></script> 
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $('#nav').localScroll(800);
+                
+                //.parallax(xPosition, speedFactor, outerHeight) options:
+                //xPosition - Horizontal position of the element
+                //inertia - speed to move relative to vertical scroll. Example: 0.1 is one tenth the speed of scrolling, 2 is twice the speed of scrolling
+                //outerHeight (true/false) - Whether or not jQuery should use it's outerHeight option to determine when a section is in the viewport
+                $('#intro').parallax("50%", 0.1);
+                $('#second').parallax("50%", 0.1);
+                $('.bg').parallax("50%", 0.4);
+                $('#third').parallax("50%", 0.3);
+            })
+        </script>
 	</body>
-	</html>
+</html>

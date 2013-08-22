@@ -118,7 +118,14 @@ body{
 	margin-top:8px;
 }
 
+#keylistarea{
+    overflow-x: hidden;
+    overflow-y: auto;
+}
 
+#timelinearea{
+    overflow-y: auto;
+}
 /* profile */
 
 .editbtn{

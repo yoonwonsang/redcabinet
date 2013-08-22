@@ -1,5 +1,5 @@
 //var baseUrl = 'http://www.demitase.com/';
-var baseUrl = 'http://www.demitase.com/';
+var baseUrl = 'http://127.0.0.1:8000/';
 var stream = [];
 var hotkeys = [];
 var cntlist = [];

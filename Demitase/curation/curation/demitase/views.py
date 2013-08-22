@@ -193,9 +193,13 @@ def checkKeyExists(key_nm):
     try:
         key_id = Keywords.objects.get(keyword_name = key_nm).id
     except:
-        k = Keywords(keyword_name = key_nm)
-        k.save()
-        key_id = Keywords.objects.get(keyword_name = key_nm).id
+        try:
+            k = Keywords(keyword_name = key_nm)
+            k.save()
+            key_id = Keywords.objects.get(keyword_name = key_nm).id
+        except:
+            print "keyword listing error"
+            key_id = -1
    
     return key_id
 
@@ -302,12 +306,15 @@ def timeline(request):
 #                 temp_surface+= item[0] + " = " + str(k) + " | "
                 if item_num < 10:
                     key_id = checkKeyExists(item[0])
-                    ck = ContentKeywords(content_type = s.content_type,
-                                         content_id = s.content_id, 
-                                         keyword_seq = item_num, 
-                                         keyword_id = key_id)
-                    ck.save()
-                    key_list.append(item[0])
+                    if key_id < 0:
+                        continue
+                    else:
+                        ck = ContentKeywords(content_type = s.content_type,
+                                             content_id = s.content_id, 
+                                             keyword_seq = item_num, 
+                                             keyword_id = key_id)
+                        ck.save()
+                        key_list.append(item[0])
                 else:
                     break
                 item_num += 1
