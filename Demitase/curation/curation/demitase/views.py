@@ -64,7 +64,7 @@ import pdb
 
 _file = open('/temp/demitase.log','a')
 
-exception_url =['youtube.com','vimeo.com','newsnetz.ch','digieco.co.kr']
+exception_url =['youtube.com','vimeo.com','newsnetz.ch','digieco.co.kr','blog.me','blog.naver.com','cafe.naver.com']
 userTimeline = []
 
 def extrat_html_document(url):
