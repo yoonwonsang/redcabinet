@@ -171,6 +171,6 @@ def get_callback(request):
 
     request.session['key'] = auth.access_token.key
     request.session['secret'] = auth.access_token.secret
-    request.session.set_expiry(600)
+    #request.session.set_expiry(600)
      
     return HttpResponseRedirect('/home/demitase.html')

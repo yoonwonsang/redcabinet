@@ -69,7 +69,10 @@ userTimeline = []
 
 def extrat_html_document(url):
     try :
-        socket = urllib2.urlopen(url,timeout = 1)
+        user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
+        headers = { 'User-Agent' : user_agent }
+        r = urllib2.Request(url, headers=headers)
+        socket = urllib2.urlopen(r,timeout = 1)
         url = socket.geturl()
         html = socket.read()
         for ext_url in exception_url:
@@ -304,7 +307,9 @@ def timeline(request):
         for k, g in itertools.groupby(reversed(di), key=itemgetter(1)):
             for item in map(itemgetter(0),g):
 #                 temp_surface+= item[0] + " = " + str(k) + " | "
-                if item_num < 10:
+                if "NN" in item[1]:
+                    continue
+                if item_num < 3:
                     key_id = checkKeyExists(item[0])
                     if key_id < 0:
                         continue
@@ -315,9 +320,10 @@ def timeline(request):
                                              keyword_id = key_id)
                         ck.save()
                         key_list.append(item[0])
+                    item_num += 1
                 else:
                     break
-                item_num += 1
+
     
         cd = ContentDetail(content_type = s.content_type,
                            content_id = s.content_id,

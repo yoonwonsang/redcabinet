@@ -1,5 +1,4 @@
-//var baseUrl = 'http://www.demitase.com/';
-var baseUrl = 'http://127.0.0.1:8000/';
+var baseUrl = 'http://www.demitase.com/';
 var stream = [];
 var hotkeys = [];
 var cntlist = [];
@@ -48,7 +47,7 @@ var doGetMoreTimeline = function(num, my_id) {
 			
 		},
 		error : function() {
-			alert("Fail to get data!");
+//			alert("Fail to get data!");
 		},
 	});
 }
