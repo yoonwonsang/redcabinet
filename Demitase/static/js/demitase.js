@@ -91,6 +91,8 @@ var doAppend = function(data) {
 				$('.name', node).append(data.username);
 				$('.content', node).append(data.text);
 				$('.date', node).append(data.date);
+				$('.userpic', node).append("<img src=\"" + data.userimg + "\">");
+				$('.time', node).append(data.date);
 				node.show();
 				$('#timelinearea').append(node);
 			}
@@ -101,6 +103,8 @@ var doAppend = function(data) {
 		$('.name', node).append(data.username);
 		$('.content', node).append(data.text);
 		$('.date', node).append(data.date);
+		$('.userpic', node).append("<img src=\"" + data.userimg + "\">");
+		$('.time', node).append(data.date);
 		node.show();	
 		$('#timelinearea').append(node);
 	}
@@ -119,6 +123,8 @@ var doAppend2 = function(data) {
 				$('.name', node).append(data.username);
 				$('.content', node).append(data.text);
 				$('.date', node).append(data.date);
+				$('.userpic', node).append("<img src=\"" + data.userimg + "\">");
+				$('.time', node).append(data.date);
 				node.show();
 				$('#timelinearea').append(node);
 			}
@@ -129,6 +135,8 @@ var doAppend2 = function(data) {
 		$('.name', node).append(data.username);
 		$('.content', node).append(data.text);
 		$('.date', node).append(data.date);
+		$('.userpic', node).append("<img src=\"" + data.userimg + "\">");
+		$('.time', node).append(data.date);
 		node.show();	
 		$('#timelinearea').append(node);
 	}
@@ -151,7 +159,8 @@ var doShowKeys = function() {
 		}
 		node = $('#sortedKeys').clone();
 		$('.word', node).append(hotkeys[i].keyword);
-		node.append("<span class=\"count_badge "+badge_style+"\">"+hotkeys[i].count+"</span>")
+		$('.word-count', node).append(hotkeys[i].count);
+		//node.append("<span class=\"count_badge "+badge_style+"\">"+hotkeys[i].count+"</span>")
 		// $('.count_badge', node).append(hotkeys[keycnt].count);
 		node.show();
 		$('#keylistarea').append(node);
@@ -202,7 +211,7 @@ var doSelectKeyword = function() {
 
 	keySelection = $('.word', $(this)).html();
 
-	$('#selectedKey').html(keySelection);
+	$('#selectedKeyInner').html(keySelection);
 	doClear();
 	for (var i in stream){
 		for (var j in stream[i].keywords){
@@ -218,7 +227,7 @@ var doSelectKeyword = function() {
 var doShowAllTimeline = function() {
 	doClear();
 	keySelection = '';
-	$('#selectedKey').html("Select a Keyword");
+	$('#selectedKeyInner').html("Select a KEYWORD");
 	for (var i in stream){
 		doAppend(stream[i]);
 	}
