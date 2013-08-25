@@ -64,7 +64,8 @@ import pdb
 
 _file = open('/temp/demitase.log','a')
 
-exception_url =['youtube.com','vimeo.com','newsnetz.ch','digieco.co.kr']
+# exception_url =['youtube.com','vimeo.com','newsnetz.ch','digieco.co.kr']
+exception_url =['youtube.com','vimeo.com','newsnetz.ch','digieco.co.kr','blog.me','blog.naver.com','cafe.naver.com']
 userTimeline = []
 
 def extrat_html_document(url):
@@ -152,6 +153,7 @@ def get_timeline(request):
                 homeTimeline.content_id = data.id_str
                 homeTimeline.content_autr_id = data.user.id
                 homeTimeline.content_autr_nm = data.user.name.encode("utf-8")
+                homeTimeline.content_autr_img = data.user.profile_image_url.encode("utf-8")
                 homeTimeline.text = data.text.encode("utf-8")
                 homeTimeline.created_at = data.created_at
                 if data.entities.urls:
@@ -230,6 +232,7 @@ def timeline(request):
             'twt_id':cd.content_id.encode("utf8"),
             'user_id':cd.content_autr_id.encode("utf8"),
             'username':cd.content_autr_nm.encode("utf8"),
+            'userimg':cd.content_autr_img.encode("utf8"),
             'text':urlize(cd.content_text).encode("utf8"),
             'date':str(cd.content_created_at),
             'keywords':key_list,
@@ -324,6 +327,7 @@ def timeline(request):
                            content_text = s.text,
                            content_autr_id = s.content_autr_id,
                            content_autr_nm = s.content_autr_nm,
+                           content_autr_img = s.content_autr_img,
                            content_created_at = s.created_at,
                            content_key_cnt = item_num) 
         cd.save()
@@ -334,6 +338,7 @@ def timeline(request):
             'twt_id':s.content_id.encode("utf8"),
             'user_id':s.content_autr_id.encode("utf8"),
             'username':s.content_autr_nm.encode("utf8"),
+            'userimg': s.content_autr_img.encode("utf8"),
             'text':urlize(s.text).encode("utf8"),
             'date':str(s.created_at),
             'keywords':key_list,
