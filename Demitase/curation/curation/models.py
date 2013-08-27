@@ -14,6 +14,7 @@ class HomeTimelineTmp(models.Model):
     content_id = models.CharField(max_length = 32)
     content_autr_id = models.CharField(max_length = 128, null = True)
     content_autr_nm = models.CharField(max_length = 128, null = True)
+    content_autr_img = models.CharField(max_length = 256, null = True)
     text = models.TextField(null = True)
     created_at = models.DateTimeField(auto_now_add = False, null = True)
     url_cnt = models.IntegerField(null=True)
@@ -45,6 +46,7 @@ class ContentDetail(models.Model):
     content_text = models.TextField()
     content_autr_id = models.CharField(max_length = 128)
     content_autr_nm = models.CharField(max_length = 128)
+    content_autr_img = models.CharField(max_length = 256)
     content_created_at = models.DateTimeField(auto_now_add = False)
     content_key_cnt = models.IntegerField()
     
