@@ -65,8 +65,9 @@ import pdb
 _file = open('/temp/demitase.log','a')
 
 # exception_url =['youtube.com','vimeo.com','newsnetz.ch','digieco.co.kr']
-exception_url =['youtube.com','vimeo.com','newsnetz.ch','digieco.co.kr','blog.me','blog.naver.com','cafe.naver.com']
-userTimeline = []
+exception_url =['youtube.com','vimeo.com','newsnetz.ch','digieco.co.kr']
+block_url = ['blog.me','blog.naver.com','cafe.naver.com']
+
 
 def extrat_html_document(url):
     try :
@@ -76,6 +77,13 @@ def extrat_html_document(url):
         socket = urllib2.urlopen(r,timeout = 1)
         url = socket.geturl()
         html = socket.read()
+
+        #block_url pass
+        for bl_url in block_url:
+            if len(url.split(bl_url)) > 1:
+                summary="block"
+                return summary
+
         for ext_url in exception_url:
             if len(url.split(ext_url)) > 1:
                 readable_title = Document(html).short_title()
@@ -275,8 +283,7 @@ def timeline(request):
                 try:
                     tagged.append((m.feature.split(",")[2],m.feature.split(",")[8]))
                 except Exception:
-                    print ""
-#                    tagged.append((m.surface,"NN"))
+                    tagged.append((m.surface,"NN"))
             m = m.next
     
     
@@ -312,6 +319,7 @@ def timeline(request):
 #                 temp_surface+= item[0] + " = " + str(k) + " | "
                 if "NN" in item[1]:
                     continue
+
                 if item_num < 3:
                     key_id = checkKeyExists(item[0])
                     if key_id < 0:

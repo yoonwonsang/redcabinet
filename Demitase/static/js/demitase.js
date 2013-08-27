@@ -1,4 +1,4 @@
-var baseUrl = 'http://www.demitase.com/';
+var baseUrl = 'http://www.redcabi.net/';
 //var baseUrl = 'http://127.0.0.1:8000/';
 var stream = [];
 var hotkeys = [];
@@ -48,7 +48,7 @@ var doGetMoreTimeline = function(num, my_id) {
 			
 		},
 		error : function() {
-//			alert("Fail to get data!");
+			//alert("Fail to get data!");
 		},
 	});
 }
