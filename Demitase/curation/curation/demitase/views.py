@@ -156,7 +156,7 @@ def get_timeline(request):
 #         HomeTimelineUrlTmp.objects.filter(user_id=verifyCred.id_str).delete()
 #     except:
 #         print "No Objects"
-        
+    
     i = 0 
     for data in userTimeline:
         if UserInfoStream.objects.filter(user_id = verifyCred.id_str, content_type = 'TW', content_id = data.id_str):
@@ -207,14 +207,13 @@ def get_timeline(request):
 #                 return toJSON({'status':'bad request'},400)
         i = i + 1
         
-    
 #     pdb.set_trace()
     cursor = connection.cursor()
-    cursor.executemany('''INSERT INTO demitase_HomeTimelineTmp (user_id, content_type, content_seq, content_id, content_autr_id, content_autr_nm, content_autr_img, text, created_at, url_cnt) 
-                                                        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)''',queryset)
-    
-    cursor.executemany('''INSERT INTO demitase_HomeTimelineUrlTmp(user_id, twt_id, url_seq, url, expanded_url) VALUES (%s,%s,%s,%s,%s)''',queryset2)
-    cursor.executemany('''INSERT INTO demitase_UserInfoStream(user_id, content_type, content_id) VALUES (%s,%s,%s)''',queryset3)
+    cursor.executemany('''INSERT INTO demitase_hometimelinetmp (user_id, content_type, content_seq, content_id, content_autr_id, content_autr_nm, content_autr_img, text, created_at, url_cnt) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)''',queryset)
+    print "sjo1"    
+    cursor.executemany('''INSERT INTO demitase_hometimelineurltmp(user_id, twt_id, url_seq, url, expanded_url) VALUES (%s,%s,%s,%s,%s)''',queryset2)
+    print "sjo2"
+    cursor.executemany('''INSERT INTO demitase_userinfostream(user_id, content_type, content_id) VALUES (%s,%s,%s)''',queryset3)
     
     transaction.commit()
 
