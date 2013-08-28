@@ -29,6 +29,7 @@ from django.views.generic import TemplateView
 from django.views.generic import View
 from django.shortcuts import render_to_response
 from django.db.models import Max
+from django.db import connection,transaction
 
 from curation import commons
 from curation import views
@@ -42,6 +43,7 @@ import MeCab
 import sys
 import string
 
+import urllib
 import urllib2
 import chardet
 
@@ -59,14 +61,16 @@ from readability.readability import Document
 
 #sjo
 import time
+import MySQLdb
 import pdb
 
 
 _file = open('/temp/demitase.log','a')
 
 # exception_url =['youtube.com','vimeo.com','newsnetz.ch','digieco.co.kr']
-exception_url =['youtube.com','vimeo.com','newsnetz.ch','digieco.co.kr','blog.me','blog.naver.com','cafe.naver.com']
-userTimeline = []
+exception_url =['youtube.com','vimeo.com','newsnetz.ch','digieco.co.kr']
+block_url = ['blog.me','blog.naver.com','cafe.naver.com']
+
 
 def extrat_html_document(url):
     try :
@@ -76,6 +80,13 @@ def extrat_html_document(url):
         socket = urllib2.urlopen(r,timeout = 1)
         url = socket.geturl()
         html = socket.read()
+
+        #block_url pass
+        for bl_url in block_url:
+            if len(url.split(bl_url)) > 1:
+                summary="block"
+                return summary
+
         for ext_url in exception_url:
             if len(url.split(ext_url)) > 1:
                 readable_title = Document(html).short_title()
@@ -124,7 +135,7 @@ def get_timeline(request):
     auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
     auth.set_access_token(request.session.get('key'), request.session.get('secret'))
     api = tweepy.API(auth_handler=auth)
-    userTimeline = api.home_timeline(count=200)
+    userTimeline = api.home_timeline(count=100)
     verifyCred = api.verify_credentials()
 #     pdb.set_trace()
     
@@ -132,55 +143,81 @@ def get_timeline(request):
         HomeTimelineTmp.objects.filter(user_id=verifyCred.id_str).delete()
     except:
         print "No Objects"
-        
+
     try:
         HomeTimelineUrlTmp.objects.filter(user_id=verifyCred.id_str).delete()
     except:
         print "No Objects"
         
+    queryset = []
+    queryset2 = []
+    queryset3 = []
+#     try:
+#         HomeTimelineUrlTmp.objects.filter(user_id=verifyCred.id_str).delete()
+#     except:
+#         print "No Objects"
+        
     i = 0 
     for data in userTimeline:
         if UserInfoStream.objects.filter(user_id = verifyCred.id_str, content_type = 'TW', content_id = data.id_str):
-            htt = HomeTimelineTmp(user_id = verifyCred.id_str,
-                                 content_type = 'TW',
-                                 content_seq = i,
-                                 content_id = data.id_str)
-            htt.save()
+            queryset.append((verifyCred.id_str, 'TW', str(i), data.id_str, None, None, None, None, None, None))
+#             queryset = queryset + "INSERT INTO demitase_HomeTimelineTmp (user_id, content_type, content_seq, content_id) VALUES ('"+verifyCred.id_str + "', 'TW', '" + str(i) + "', '" + data.id_str + "');"
+            
+#             htt = HomeTimelineTmp(user_id = verifyCred.id_str,
+#                                  content_type = 'TW',
+#                                  content_seq = i,
+#                                  content_id = data.id_str)
+#             htt.save()
         else:
-            homeTimeline = HomeTimelineTmp()
+#             homeTimeline = HomeTimelineTmp()
             j = 0
-            try:
-                homeTimeline.user_id = verifyCred.id_str
-                homeTimeline.content_type = 'TW'
-                homeTimeline.content_seq = i
-                homeTimeline.content_id = data.id_str
-                homeTimeline.content_autr_id = data.user.id
-                homeTimeline.content_autr_nm = data.user.name.encode("utf-8")
-                homeTimeline.content_autr_img = data.user.profile_image_url.encode("utf-8")
-                homeTimeline.text = data.text.encode("utf-8")
-                homeTimeline.created_at = data.created_at
-                if data.entities.urls:
-                    for u in data.entities.urls:
-                        urlList = HomeTimelineUrlTmp()
-                        urlList.user_id = verifyCred.id_str
-                        urlList.twt_id = data.id_str
-                        urlList.url_seq = j
-                        urlList.url = u.url
-                        urlList.expanded_url = u.expanded_url
-                        urlList.save()
-                        j = j + 1
-                homeTimeline.url_cnt = j
-                homeTimeline.save()
-                
-                uis = UserInfoStream(user_id = verifyCred.id_str,
-                                     content_type = 'TW',
-                                     content_id = data.id_str)
-                uis.save()
-    
-            except:
-                return toJSON({'status':'bad request'},400)
+#             try:
+#                 homeTimeline.user_id = verifyCred.id_str
+#                 homeTimeline.content_type = 'TW'
+#                 homeTimeline.content_seq = i
+#                 homeTimeline.content_id = data.id_str
+#                 homeTimeline.content_autr_id = data.user.id
+#                 homeTimeline.content_autr_nm = data.user.name.encode("utf-8")
+#                 homeTimeline.content_autr_img = data.user.profile_image_url.encode("utf-8")
+#                 homeTimeline.text = data.text.encode("utf-8")
+#                 homeTimeline.created_at = data.created_at
+            if data.entities.urls:
+                for u in data.entities.urls:
+                    queryset2.append((verifyCred.id_str, data.id_str, str(j), u.url, u.expanded_url))
+                    j = j + 1
+#                         urlList = HomeTimelineUrlTmp()
+#                         urlList.user_id = verifyCred.id_str
+#                         urlList.twt_id = data.id_str
+#                         urlList.url_seq = j
+#                         urlList.url = u.url
+#                         urlList.expanded_url = u.expanded_url
+#                         urlList.save()
+#                 homeTimeline.url_cnt = j
+#                 homeTimeline.save()
+#                 
+
+            queryset.append((verifyCred.id_str, 'TW', str(i), data.id_str, data.user.id_str, data.user.name, data.user.profile_image_url, data.text.replace(',','\,').replace('#','\#').replace('\'','\\\'').replace('"','\"'), str(data.created_at), str(j)))
+            queryset3.append((verifyCred.id_str, 'TW', data.id_str)) 
+#                 uis = UserInfoStream(user_id = verifyCred.id_str,
+#                                      content_type = 'TW',
+#                                      content_id = data.id_str)
+#                 uis.save()
+#     
+#             except:
+#                 return toJSON({'status':'bad request'},400)
         i = i + 1
+        
     
+#     pdb.set_trace()
+    cursor = connection.cursor()
+    cursor.executemany('''INSERT INTO demitase_HomeTimelineTmp (user_id, content_type, content_seq, content_id, content_autr_id, content_autr_nm, content_autr_img, text, created_at, url_cnt) 
+                                                        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)''',queryset)
+    
+    cursor.executemany('''INSERT INTO demitase_HomeTimelineUrlTmp(user_id, twt_id, url_seq, url, expanded_url) VALUES (%s,%s,%s,%s,%s)''',queryset2)
+    cursor.executemany('''INSERT INTO demitase_UserInfoStream(user_id, content_type, content_id) VALUES (%s,%s,%s)''',queryset3)
+    
+    transaction.commit()
+
     data = {'api_cnt':len(userTimeline),
             'my_id':verifyCred.id_str,}
 
@@ -275,8 +312,7 @@ def timeline(request):
                 try:
                     tagged.append((m.feature.split(",")[2],m.feature.split(",")[8]))
                 except Exception:
-                    print ""
-#                    tagged.append((m.surface,"NN"))
+                    tagged.append((m.surface,"NN"))
             m = m.next
     
     
@@ -312,6 +348,7 @@ def timeline(request):
 #                 temp_surface+= item[0] + " = " + str(k) + " | "
                 if "NN" in item[1]:
                     continue
+
                 if item_num < 3:
                     key_id = checkKeyExists(item[0])
                     if key_id < 0:

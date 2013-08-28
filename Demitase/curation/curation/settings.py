@@ -14,15 +14,23 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+#        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+#        'NAME': '/Users/massinet/Workspace/redcabinet/Demitase/curation/db/db.sqlite3',                      # Or path to database file if using sqlite3.
+#        'USER': '',                      # Not used with sqlite3.
+#        'PASSWORD': '',                  # Not used with sqlite3.
+#        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+#        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+         'NAME': 'redcabinet',
+#        'NAME': '/Users/massinet/Workspace/redcabinet/Demitase/curation/db/db.sqlite3',                      # Or path to database file if using sqlite3.
 #        'NAME': '/home/fivestar/Fivestar/redcabinet/Demitase/curation/db/db.sqlite3',                      # Or path to database file if using sqlite3.
-        'NAME': '/Users/massinet/Workspace/redcabinet/Demitase/curation/db/db.sqlite3',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+         'USER': 'root',                      # Not used with sqlite3.
+         'PASSWORD': 'demitase',                  # Not used with sqlite3.
+         'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
+         'PORT': '3389',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
+DATABASE_OPTIONS = {'charset': 'utf8'}
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 STATIC_ROOT = os.path.abspath(os.path.join(ROOT_PATH, '..', 'static'))
@@ -161,9 +169,9 @@ LOGGING = {
 }
 
 
-# CONSUMER_KEY = 'QN5inGo2xmA7717qxCQ'
-# CONSUMER_SECRET = 'dxOvz4PmcWBrQlEkFpK9lu68dT1q0QNEB4UVMYWpmRI'
-#CALLBACK_URL = 'http://www.demitase.com/oauth/get_callback/'
-CALLBACK_URL = 'http://127.0.0.1:8000/oauth/get_callback/'
-CONSUMER_KEY = 'FL686aqs4NVkWyrrxs7zQ'
-CONSUMER_SECRET = 'bxcIpVfAf8OMhKmj966C1EynevAz5OvoLYNlMEYxFE'
+CONSUMER_KEY = 'QN5inGo2xmA7717qxCQ'
+CONSUMER_SECRET = 'dxOvz4PmcWBrQlEkFpK9lu68dT1q0QNEB4UVMYWpmRI'
+CALLBACK_URL = 'http://www.demitase.com/oauth/get_callback/'
+# CALLBACK_URL = 'http://127.0.0.1:8000/oauth/get_callback/'
+# CONSUMER_KEY = 'FL686aqs4NVkWyrrxs7zQ'
+# CONSUMER_SECRET = 'bxcIpVfAf8OMhKmj966C1EynevAz5OvoLYNlMEYxFE'
