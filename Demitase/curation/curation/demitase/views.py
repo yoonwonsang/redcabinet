@@ -135,7 +135,7 @@ def get_timeline(request):
     auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
     auth.set_access_token(request.session.get('key'), request.session.get('secret'))
     api = tweepy.API(auth_handler=auth)
-    userTimeline = api.home_timeline(count=100)
+    userTimeline = api.home_timeline(count=200)
     verifyCred = api.verify_credentials()
 #     pdb.set_trace()
     
