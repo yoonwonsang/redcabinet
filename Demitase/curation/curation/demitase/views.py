@@ -63,7 +63,7 @@ from readability.readability import Document
 import time
 import MySQLdb
 import pdb
-
+import re
 
 _file = open('/temp/demitase.log','a')
 
@@ -144,7 +144,7 @@ def get_timeline(request):
     auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
     auth.set_access_token(request.session.get('key'), request.session.get('secret'))
     api = tweepy.API(auth_handler=auth)
-    userTimeline = api.home_timeline(count=200)
+    userTimeline = api.home_timeline(count=100)
     verifyCred = api.verify_credentials()
 #     pdb.set_trace()
     
@@ -204,8 +204,8 @@ def get_timeline(request):
 #                 homeTimeline.url_cnt = j
 #                 homeTimeline.save()
 #                 
-
-            queryset.append((verifyCred.id_str, 'TW', str(i), data.id_str.encode('utf-8'), data.user.id_str, data.user.name, data.user.profile_image_url, data.text.encode('utf-8') , str(data.created_at), str(j)))
+            no_emoji_text = re.sub('[\xF0-\xF7][\x80-\xBF][\x80-\xBF][\x80-\xBF]', '', data.text.encode('utf-8'))
+            queryset.append((verifyCred.id_str, 'TW', str(i), data.id_str.encode('utf-8'), data.user.id_str, data.user.name, data.user.profile_image_url, no_emoji_text , str(data.created_at), str(j)))
             queryset3.append((verifyCred.id_str, 'TW', data.id_str)) 
 #                 uis = UserInfoStream(user_id = verifyCred.id_str,
 #                                      content_type = 'TW',
