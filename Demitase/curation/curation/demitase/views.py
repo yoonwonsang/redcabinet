@@ -74,6 +74,7 @@ block_url = ['blog.me','blog.naver.com','cafe.naver.com']
 
 def extrat_html_document(url):
     try :
+        print "extrat_html_document"
         user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
         headers = { 'User-Agent' : user_agent }
         r = urllib2.Request(url, headers=headers)
@@ -96,8 +97,16 @@ def extrat_html_document(url):
 
         readable_article = Document(html).summary()
         readable_title = Document(html).short_title()
-        summary = readable_title.encode('utf-8')
-        summary += readable_article.encode('utf-8')
+        summary = readable_title.encode('utf-8') + readable_title.encode('utf-8')
+        print "soup start"
+        soup = BeautifulSoup(readable_article.replace("br/","p"),"html.parser")
+        print "summary:"
+
+        for s in soup("p"):
+            summary += str(s.encode('utf-8'))
+
+#        summary += readable_article.encode('utf-8')
+
 
     except Exception:
         _file.write('extrat_html_document Failed URL : ' + url + '\n')
@@ -196,7 +205,7 @@ def get_timeline(request):
 #                 homeTimeline.save()
 #                 
 
-            queryset.append((verifyCred.id_str, 'TW', str(i), data.id_str, data.user.id_str, data.user.name, data.user.profile_image_url, data.text.replace(',','\,').replace('#','\#').replace('\'','\\\'').replace('"','\"'), str(data.created_at), str(j)))
+            queryset.append((verifyCred.id_str, 'TW', str(i), data.id_str.encode('utf-8'), data.user.id_str, data.user.name, data.user.profile_image_url, data.text.encode('utf-8') , str(data.created_at), str(j)))
             queryset3.append((verifyCred.id_str, 'TW', data.id_str)) 
 #                 uis = UserInfoStream(user_id = verifyCred.id_str,
 #                                      content_type = 'TW',
@@ -210,9 +219,7 @@ def get_timeline(request):
 #     pdb.set_trace()
     cursor = connection.cursor()
     cursor.executemany('''INSERT INTO demitase_hometimelinetmp (user_id, content_type, content_seq, content_id, content_autr_id, content_autr_nm, content_autr_img, text, created_at, url_cnt) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)''',queryset)
-    print "sjo1"    
     cursor.executemany('''INSERT INTO demitase_hometimelineurltmp(user_id, twt_id, url_seq, url, expanded_url) VALUES (%s,%s,%s,%s,%s)''',queryset2)
-    print "sjo2"
     cursor.executemany('''INSERT INTO demitase_userinfostream(user_id, content_type, content_id) VALUES (%s,%s,%s)''',queryset3)
     
     transaction.commit()
@@ -258,8 +265,10 @@ def timeline(request):
     ex_url = []
     key_list = []
 
+    print get_no
+    print my_id
     s = HomeTimelineTmp.objects.get(user_id = str(my_id), content_seq = str(get_no))
-
+    print s
     if checkContentExists(s.content_type, s.content_id):
         cd = ContentDetail.objects.get(content_type = s.content_type, content_id = s.content_id)
         if cd.content_key_cnt > 0:
@@ -302,13 +311,16 @@ def timeline(request):
     #       link 없는 tweet
         else:
             t = MeCab.Tagger (" ".join(sys.argv))
-            m = t.parseToNode(s.text.encode("utf8"))
+            m = t.parseToNode(s.text.encode('utf-8'))
     
     #       url & text 공통 처리 부분 => mecab
     #        temp_surface = "Tweet" + str(num) + " :"
         while m:
+            print "sjo11"
             if m.feature.split(",")[0] == "NN":
                 try:
+                    print "sjo"
+                    print m.feature.split(",")[2]
                     tagged.append((m.feature.split(",")[2],m.feature.split(",")[8]))
                 except Exception:
                     tagged.append((m.surface,"NN"))

@@ -169,8 +169,8 @@ LOGGING = {
 }
 
 
-CONSUMER_KEY = 'QN5inGo2xmA7717qxCQ'
-CONSUMER_SECRET = 'dxOvz4PmcWBrQlEkFpK9lu68dT1q0QNEB4UVMYWpmRI'
+CONSUMER_KEY = 'iAP0cGqbrfUhbxiX8qtppw'
+CONSUMER_SECRET = 'RYVBqvRngSqwe2yYSe9007ILYjDKtVp2EkzsEXujVE'
 CALLBACK_URL = 'http://www.redcabi.net/oauth/get_callback/'
 # CALLBACK_URL = 'http://127.0.0.1:8000/oauth/get_callback/'
 # CONSUMER_KEY = 'FL686aqs4NVkWyrrxs7zQ'
